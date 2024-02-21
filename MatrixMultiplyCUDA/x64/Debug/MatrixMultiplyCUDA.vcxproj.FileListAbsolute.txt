@@ -1,0 +1,1 @@
+C:\Users\savan\OneDrive\Desktop\programming\535hw\labn\MatrixMultiplyCUDA\x64\Debug\MatrixMultiplyCUDA.exe
