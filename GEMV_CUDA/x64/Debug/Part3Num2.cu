@@ -4,16 +4,17 @@
 #include <cstdlib>
 #include <ctime>
 
-__global__ void gemv_unrolled(double_loop)(float *A, float *x, float *y, int N) {
+__global__ void gemv_unrolled(float *A, float *x, float *y, int N) {
     int row = blockIdx.x * blockDim.x + threadIdx.x;
     if (row < N) {
         float sum = 0.0f;
-        for (int col = 0; col < N; col += 8) { // Increase the step to process 8 elements per iteration
+        for (int col = 0; col < N; col += 8) { // Increment by 8 for double unrolling
             sum += A[row * N + col] * x[col];
             sum += A[row * N + col + 1] * x[col + 1];
             sum += A[row * N + col + 2] * x[col + 2];
             sum += A[row * N + col + 3] * x[col + 3];
-            sum += A[row * N + col + 4] * x[col + 4]; // New additions start here
+            // Additional unrolling
+            sum += A[row * N + col + 4] * x[col + 4];
             sum += A[row * N + col + 5] * x[col + 5];
             sum += A[row * N + col + 6] * x[col + 6];
             sum += A[row * N + col + 7] * x[col + 7];
@@ -21,6 +22,7 @@ __global__ void gemv_unrolled(double_loop)(float *A, float *x, float *y, int N) 
         y[row] = sum;
     }
 }
+
 
 void initialize(float *A, float *x, int N) {
     for (int i = 0; i < N * N; ++i) {
@@ -95,4 +97,3 @@ int main() {
     outFile.close(); // Close the CSV file
     return 0;
 }
-
